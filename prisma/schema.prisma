@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:Prn..2u4@localhost:3306/leonardoapi"
+}
+
+model Account {
+  id        String     @id @default(uuid())
+  name      String
+  schedules Schedule[]
+  tasks     Task[]
+}
+
+model Agent {
+  id        String     @id @default(uuid())
+  name      String
+  schedules Schedule[]
+}
+
+model Schedule {
+  id         String   @id @default(uuid())
+  start_time DateTime
+  end_time   DateTime
+  tasks      Task[]
+  Account    Account? @relation(fields: [accountId], references: [id])
+  accountId  String?
+  Agent      Agent?   @relation(fields: [agentId], references: [id])
+  agentId    String?
+}
+
+model Task {
+  id         String    @id @default(uuid())
+  start_time DateTime
+  duration   Int
+  name       String
+  type       String
+  Schedule   Schedule? @relation(fields: [scheduleId], references: [id])
+  scheduleId String
+  Account    Account?  @relation(fields: [accountId], references: [id])
+  accountId  String?
+}
